@@ -1,0 +1,65 @@
+import numpy as np
+from scipy import stats
+
+class ABTest:
+    def __init__(self):
+        self.group_a = []
+        self.group_b = []
+
+    def add_observation(self, group, value):
+        """
+        Add an observation to one of the groups.
+        :param group: 'A' or 'B'
+        :param value: The observed value (e.g., conversion rate, click rate)
+        """
+        if group == 'A':
+            self.group_a.append(value)
+        elif group == 'B':
+            self.group_b.append(value)
+        else:
+            raise ValueError("Group must be 'A' or 'B'")
+
+    def get_statistics(self):
+        """
+        Calculate and return basic statistics for both groups.
+        :return: A dictionary with means and standard deviations for both groups
+        """
+        stats = {
+            'group_a_mean': np.mean(self.group_a),
+            'group_a_std': np.std(self.group_a, ddof=1),
+            'group_b_mean': np.mean(self.group_b),
+            'group_b_std': np.std(self.group_b, ddof=1),
+        }
+        return stats
+
+    def perform_ttest(self):
+        """
+        Perform a two-sample t-test to determine if there is a significant difference between groups.
+        :return: t-statistic and p-value
+        """
+        t_stat, p_value = stats.ttest_ind(self.group_a, self.group_b, equal_var=False)
+        return t_stat, p_value
+
+    def summary(self):
+        """
+        Print a summary of the A/B test results.
+        """
+        stats = self.get_statistics()
+        t_stat, p_value = self.perform_ttest()
+        
+        print("Group A: Mean = {:.4f}, Std Dev = {:.4f}".format(stats['group_a_mean'], stats['group_a_std']))
+        print("Group B: Mean = {:.4f}, Std Dev = {:.4f}".format(stats['group_b_mean'], stats['group_b_std']))
+        print("T-statistic: {:.4f}".format(t_stat))
+        print("P-value: {:.4f}".format(p_value))
+        
+        if p_value < 0.05:
+            print("There is a significant difference between the two groups (p < 0.05).")
+        else:
+            print("There is no significant difference between the two groups (p >= 0.05).")
+
+# Example usage
+if __name__ == "__main__":
+    ab_test = ABTest()
+    
+    # Adding some sample data
+    ab_test.
