@@ -56,10 +56,20 @@ class ABTest:
             print("There is a significant difference between the two groups (p < 0.05).")
         else:
             print("There is no significant difference between the two groups (p >= 0.05).")
-
 # Example usage
 if __name__ == "__main__":
     ab_test = ABTest()
     
     # Adding some sample data
-    ab_test.
+    ab_test.add_observation('A', 0.30)
+    ab_test.add_observation('A', 0.32)
+    ab_test.add_observation('A', 0.34)
+    ab_test.add_observation('A', 0.29)
+    
+    ab_test.add_observation('B', 0.35)
+    ab_test.add_observation('B', 0.36)
+    ab_test.add_observation('B', 0.33)
+    ab_test.add_observation('B', 0.37)
+    
+    # Print summary
+    ab_test.summary()
